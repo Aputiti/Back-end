@@ -1,0 +1,31 @@
+### GET /
+GET http://localhost:3000/
+
+### GET /items
+GET http://localhost:3000/items
+
+### GET /random-fact
+GET http://localhost:3000/random-fact
+
+### GET /items/:id
+GET http://localhost:3000/items/10
+
+### POST /items
+POST http://localhost:3000/items
+content-type: application/json
+
+{"name": "kurkku"}
+
+### POST /items error
+POST http://localhost:3000/items
+
+{"jotain": "jotan"}
+
+### DELETE /items/:id
+DELETE http://localhost:3000/items/5
+
+### PUT /items/:id
+PUT http://localhost:3000/items/9
+content-type: application/json
+
+{"name": "updated car company"}
