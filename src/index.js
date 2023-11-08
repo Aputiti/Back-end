@@ -40,7 +40,9 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   const values = {
     title: 'Media sharing REST API',
-    message: 'Documentation in readme.md',
+    message:
+      'This is a server hosting static images, also data about those media items and user information.',
+    message2: 'Documentation in readme.md',
   };
   res.render('home', values);
 });
