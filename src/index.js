@@ -3,7 +3,7 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import {getItems, getItemsById, postItem} from './items.js';
 import {getUsers} from './user.js';
-import {getMedia} from './media.js';
+import {getMedia, getMediaById} from './media.js';
 
 const hostname = '127.0.0.1';
 const app = express();
@@ -16,6 +16,7 @@ app.set('views', 'src/views');
 
 app.use(express.json());
 app.use('/docs', express.static(path.join(__dirname, '../docs')));
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // simple custom middleware for logging/debugging all requests
 app.use((req, res, next) => {
@@ -25,7 +26,10 @@ app.use((req, res, next) => {
 
 // render pug a file (home.pug) example
 app.get('/', (req, res) => {
-  const values = {title: 'Dummy REST API docs', message: 'TODO: docs'};
+  const values = {
+    title: 'Media sharing REST API',
+    message: 'Documentation in readme.md',
+  };
   res.render('home', values);
 });
 
@@ -56,7 +60,11 @@ app.post('/api/items', postItem);
 app.delete('/api/items');
 
 // media endpoints
+// get all media
 app.get('/api/media', getMedia);
+
+// get media by id
+app.get('/api/media/:id', getMediaById);
 
 // user endpoints
 app.get('/api/user', getUsers);

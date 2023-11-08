@@ -2,7 +2,7 @@
 const mediaItems = [
   {
     media_id: 9632,
-    filename: 'ffd8.jpg',
+    filename: 'ffd8.jpeg',
     filesize: 887574,
     title: 'Favorite drink',
     description: '',
@@ -12,7 +12,7 @@ const mediaItems = [
   },
   {
     media_id: 9626,
-    filename: 'dbbd.jpg',
+    filename: 'dbbd.jpeg',
     filesize: 60703,
     title: 'Miika',
     description: 'My Photo',
@@ -22,7 +22,7 @@ const mediaItems = [
   },
   {
     media_id: 9625,
-    filename: '2f9b.jpg',
+    filename: '2f9b.jpeg',
     filesize: 30635,
     title: 'Aksux',
     description: 'friends',
@@ -32,7 +32,7 @@ const mediaItems = [
   },
   {
     media_id: 9592,
-    filename: 'f504.jpg',
+    filename: 'f504.jpeg',
     filesize: 48975,
     title: 'Desert',
     description: '',
@@ -42,7 +42,7 @@ const mediaItems = [
   },
   {
     media_id: 9590,
-    filename: '60ac.jpg',
+    filename: '60ac.jpeg',
     filesize: 23829,
     title: 'Basement',
     description: 'Light setup in basement',
@@ -52,8 +52,53 @@ const mediaItems = [
   },
 ];
 
+/**
+ * Get all media request handler
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 const getMedia = (req, res) => {
   res.json(mediaItems);
 };
 
-export {getMedia};
+/**
+ * Get a media by its id
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+const getMediaById = (req, res) => {
+  // if media with id exists send it, otherwise send 404
+  console.log('getMediaById', req.params);
+  const media = mediaItems.find((element) => element.media_id == req.params.id);
+  if (media) {
+    res.json(media);
+  } else {
+    res.status(404);
+    res.json({message: 'Media not found.'});
+  }
+};
+
+const postMedia = (req, res) => {
+  console.log('new media posted', req.body);
+  if (req.body.name) {
+    mediaItems.push();
+    res.sendStatus(201);
+  } else {
+    res.sendStatus(400);
+  }
+};
+
+const postItem = (req, res) => {
+  console.log('new item posted', req.body);
+  // TODO: check last weeks example for generating an id
+  if (req.body.name) {
+    items.push({id: 0, name: req.body.name});
+    res.sendStatus(201);
+  } else {
+    res.sendStatus(400);
+  }
+};
+
+export {getMedia, getMediaById};

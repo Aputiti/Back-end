@@ -23,6 +23,7 @@ const getItems = (req, res) => {
 };
 
 /**
+ * Get an item by its id
  *
  * @param {*} req
  * @param {*} res
@@ -52,4 +53,6 @@ const postItem = (req, res) => {
 
 // TODO: add deleteItem(), putItem() and routing for those in index.js
 
-export {getItems, getItemsById, postItem};
+const deleteItem = (req, res) => {};
+
+export {getItems, getItemsById, postItem, deleteItem};
