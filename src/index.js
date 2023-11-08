@@ -1,9 +1,21 @@
 import express from 'express';
 import path from 'path';
 import {fileURLToPath} from 'url';
-import {getItems, getItemsById, postItem} from './items.js';
-import {getUsers} from './user.js';
-import {getMedia, getMediaById} from './media.js';
+import {
+  getItems,
+  getItemsById,
+  postItem,
+  putItem,
+  deleteItem,
+} from './items.js';
+import {getUsers, getUserById, postUser, putUser, deleteUser} from './user.js';
+import {
+  getMedia,
+  getMediaById,
+  postMedia,
+  putMedia,
+  deleteMedia,
+} from './media.js';
 
 const hostname = '127.0.0.1';
 const app = express();
@@ -46,28 +58,40 @@ app.get('/:message', (req, res) => {
   res.render('home', values);
 });
 
-// example generic items api
-
 // get all items
 app.get('/api/items', getItems);
 // get items by id
 app.get('/api/items/:id', getItemsById);
 // modify
-app.put('/api/items');
+app.put('/api/items/:id', putItem);
 // add new item
 app.post('/api/items', postItem);
 // remove existing item
-app.delete('/api/items');
+app.delete('/api/items/:id', deleteItem);
 
 // media endpoints
 // get all media
 app.get('/api/media', getMedia);
-
 // get media by id
 app.get('/api/media/:id', getMediaById);
+// add new media
+app.post('/api/media', postMedia);
+// put media
+app.put('/api/media/:id', putMedia);
+// delete media
+app.delete('/api/media/:id', deleteMedia);
 
 // user endpoints
+// get all user
 app.get('/api/user', getUsers);
+// get user by id
+app.get('/api/user/:id', getUserById);
+// add new user
+app.post('/api/user', postUser);
+// put user
+app.put('/api/user/:id', putUser);
+// delete user
+app.delete('/api/user/:id', deleteUser);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

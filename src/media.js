@@ -80,25 +80,66 @@ const getMediaById = (req, res) => {
   }
 };
 
+/**
+ * Post/add a media
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 const postMedia = (req, res) => {
   console.log('new media posted', req.body);
-  if (req.body.name) {
-    mediaItems.push();
+  const newId = Math.floor(Math.random() * 9000 + 1000);
+  if (req.body.filename) {
+    mediaItems.push({
+      media_id: newId,
+      filename: req.body.filename,
+      title: req.body.title,
+      description: req.body.description,
+      user_id: req.body.user_id,
+      media_type: req.body.media_type,
+    });
     res.sendStatus(201);
   } else {
     res.sendStatus(400);
   }
 };
 
-const postItem = (req, res) => {
-  console.log('new item posted', req.body);
-  // TODO: check last weeks example for generating an id
-  if (req.body.name) {
-    items.push({id: 0, name: req.body.name});
-    res.sendStatus(201);
+/**
+ * Modify/update media by its ID
+ *
+ * @param {object} req
+ * @param {object} res
+ */
+const putMedia = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = mediaItems.findIndex((element) => element.media_id === id);
+  if (index !== -1) {
+    mediaItems[index].title = req.body.title;
+    mediaItems[index].description = req.body.description;
+    console.log(index);
+    res.sendStatus(200);
   } else {
-    res.sendStatus(400);
+    res.status(404);
+    res.json({message: 'Media not found.'});
   }
 };
 
-export {getMedia, getMediaById};
+/**
+ * Delete media by its ID
+ *
+ * @param {object} req
+ * @param {object} res
+ */
+const deleteMedia = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = mediaItems.findIndex((element) => element.media_id === id);
+  if (index !== -1) {
+    mediaItems.splice(index, 1);
+    res.sendStatus(200);
+  } else {
+    res.status(404);
+    res.json({message: 'Media not found.'});
+  }
+};
+
+export {getMedia, getMediaById, postMedia, putMedia, deleteMedia};

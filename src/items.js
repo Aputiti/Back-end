@@ -3,6 +3,10 @@ const items = [
   {id: 5, name: 'porkkana'},
   {id: 6, name: 'omena'},
   {id: 19, name: 'appelsiini'},
+  {id: 11, name: 'bataatti'},
+  {id: 15, name: 'peruna'},
+  {id: 10, name: 'salaatti'},
+  {id: 3, name: 'kirsikka'},
 ];
 
 /**
@@ -14,7 +18,6 @@ const items = [
  */
 const getItems = (req, res) => {
   const limit = req.query.limit;
-  // TODO: check that the param value is int before using
   if (limit) {
     res.json(items.slice(0, limit));
   } else {
@@ -40,19 +43,58 @@ const getItemsById = (req, res) => {
   }
 };
 
+/**
+ * Post/add an item
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 const postItem = (req, res) => {
   console.log('new item posted', req.body);
-  // TODO: check last weeks example for generating an id
   if (req.body.name) {
-    items.push({id: 0, name: req.body.name});
+    const newId = items[items.length - 1].id + 1;
+    items.push({id: newId, name: req.body.name});
     res.sendStatus(201);
   } else {
     res.sendStatus(400);
   }
 };
 
-// TODO: add deleteItem(), putItem() and routing for those in index.js
+/**
+ * Modify/update item by its ID
+ *
+ * @param {object} req
+ * @param {object} res
+ */
+const putItem = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = items.findIndex((element) => element.id === id);
+  if (index !== -1) {
+    items[index].name = req.body.name;
+    console.log(index);
+    res.sendStatus(200);
+  } else {
+    res.status(404);
+    res.json({message: 'Item not found.'});
+  }
+};
 
-const deleteItem = (req, res) => {};
+/**
+ * Delete media by its ID
+ *
+ * @param {object} req
+ * @param {object} res
+ */
+const deleteItem = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = items.findIndex((element) => element.id === id);
+  if (index !== -1) {
+    items.splice(index, 1);
+    res.sendStatus(200);
+  } else {
+    res.status(404);
+    res.json({message: 'Item not found.'});
+  }
+};
 
-export {getItems, getItemsById, postItem, deleteItem};
+export {getItems, getItemsById, postItem, deleteItem, putItem};
