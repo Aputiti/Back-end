@@ -29,3 +29,15 @@ PUT http://localhost:3000/items/9
 content-type: application/json
 
 {"name": "updated car company"}
+
+### GET /kukkuu
+GET http://localhost:3000/kukkuu
+
+### GET /something-else
+GET http://localhost:3000/morjes
+
+### GET all users
+GET http://localhost:3000/api/user
+
+### GET all media items
+GET http://localhost:3000/api/media

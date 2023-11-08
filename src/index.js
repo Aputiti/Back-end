@@ -1,63 +1,66 @@
-import http from 'http';
-import {
-  getItems,
-  getItemsById,
-  postItem,
-  deleteItem,
-  putItem,
-  funfacts,
-} from './items.js';
-const hostname = '127.0.0.1';
-const port = 3000;
+import express from 'express';
+import path from 'path';
+import {fileURLToPath} from 'url';
+import {getItems, getItemsById, postItem} from './items.js';
+import {getUsers} from './user.js';
+import {getMedia} from './media.js';
 
-const server = http.createServer((req, res) => {
-  console.log('request', req.method, req.url);
-  const {method, url} = req;
-  const reqParts = url.split('/');
-  // check method, url and generate response accordingly (=routing)
-  if (method === 'GET' && url === '/') {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write('<h1>Welcome to my Car Company API!</h1>');
-    res.write(
-      '<p>This is a simple REST API server that serves a list of car companies and also provides a random fun fact generator.</p>'
-    );
-    res.write('<p>Documentation:</p>');
-    res.write("<p>/items - get all car companies with their id's.</p>");
-    res.write('<p>/random-fact - get a random fact.</p>');
-    res.write('<p>/items/:id - get a car company using its id.</p>');
-    res.write('<p>POST /items - add a new car company.</p>');
-    res.write('<p>DELETE /items/:id - delete a car company using its id.</p>');
-    res.write('<p>PUT /items/:id- change a car company using its id.</p>');
-    res.write(
-      '<br><a href="https://www.cosmopolitan.com/uk/worklife/a33367076/fun-facts-random/">Fun facts source</a>'
-    );
-    res.end();
-  } else if (method === 'GET' && url === '/random-fact') {
-    const randomize = Math.floor(Math.random() * funfacts.length);
-    const randomFact = funfacts[randomize];
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(`{"message": "Random Fact", "fact": "${randomFact}"}`);
-  } else if (method === 'GET' && reqParts[1] === 'items' && reqParts[2]) {
-    console.log('GETting item with id', reqParts[2]);
-    getItemsById(res, reqParts[2]);
-  } else if (method === 'GET' && reqParts[1] === 'items') {
-    console.log('GETting all items');
-    getItems(res);
-  } else if (method === 'POST' && reqParts[1] === 'items') {
-    console.log('POSTing a new item');
-    postItem(req, res);
-  } else if (method === 'DELETE' && reqParts[1] === 'items' && reqParts[2]) {
-    console.log('DELETING item with id', reqParts[2]);
-    deleteItem(req, res, reqParts[2]);
-  } else if (method === 'PUT' && reqParts[1] === 'items' && reqParts[2]) {
-    console.log('UPDATING item with id', reqParts[2]);
-    putItem(req, res, reqParts[2]);
-  } else {
-    res.writeHead(404, {'Content-Type': 'application/json'});
-    res.end('{"message": "404 Resource not found!"}');
-  }
+const hostname = '127.0.0.1';
+const app = express();
+const port = 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.set('view engine', 'pug');
+app.set('views', 'src/views');
+
+app.use(express.json());
+app.use('/docs', express.static(path.join(__dirname, '../docs')));
+
+// simple custom middleware for logging/debugging all requests
+app.use((req, res, next) => {
+  console.log('Time:', Date.now(), req.method, req.url);
+  next();
 });
 
-server.listen(port, hostname, () => {
+// render pug a file (home.pug) example
+app.get('/', (req, res) => {
+  const values = {title: 'Dummy REST API docs', message: 'TODO: docs'};
+  res.render('home', values);
+});
+
+// dummy routing example
+app.get('/kukkuu', (request, response) => {
+  const myResponse = {message: 'No moro!'};
+  //response.json(myResponse);
+  response.sendStatus(200);
+});
+
+// other dummy pug example
+app.get('/:message', (req, res) => {
+  const values = {title: 'Dummy REST API docs', message: req.params.message};
+  res.render('home', values);
+});
+
+// example generic items api
+
+// get all items
+app.get('/api/items', getItems);
+// get items by id
+app.get('/api/items/:id', getItemsById);
+// modify
+app.put('/api/items');
+// add new item
+app.post('/api/items', postItem);
+// remove existing item
+app.delete('/api/items');
+
+// media endpoints
+app.get('/api/media', getMedia);
+
+// user endpoints
+app.get('/api/user', getUsers);
+
+app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
