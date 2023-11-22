@@ -91,6 +91,6 @@ WHERE comment_id = 1;
 SELECT * FROM MediaItems
 WHERE user_id = 260;
 
--- see all comments on a media item
+-- see all comments on a media item 
 SELECT * FROM Comments
 WHERE media_id = 3;
